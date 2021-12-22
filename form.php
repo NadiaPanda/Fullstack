@@ -1,6 +1,7 @@
 
 <?php
 
+
 $user = 'root';
 $password = '';
 $pdo = new pdo ($dsn = 'mysql:dbname=fullstack;host=127.0.0.1', $user, $password );
@@ -16,7 +17,7 @@ $res->execute([
     ':name' => $name,
     ':login' => $login,
     ':password' => $password,
-    'city_id ' => $city_id 
+    ':city_id ' => $city_id 
 
 ]);
 
