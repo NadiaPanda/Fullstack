@@ -1,24 +1,27 @@
 <?php
 session_start();
+$user = $password = 'root';
+$pdo = new Pdo('mysql:dbname=fullstack2;host=127.0.0.1;port=3307', $user, $password);
 
-$user = 'root';
-$password = '';
-$pdo = new pdo ($dsn = 'mysql:dbname=fullstack;host=127.0.0.1', $user, $password ); 
-
-$userID = $_POST['id'];
+$userId = $_POST['id'];
 $name = $_POST['name'];
 $login = $_POST['login'];
+$cityId = $_POST['city_id'];
 
-$query = "UPDATE users SET name = :name, login = :login WHERE id = :id";
+$query = "UPDATE users SET name = :name, city_id = :city_id, login = :login WHERE id = :id";
 $res = $pdo->prepare($query);
-$status =  $res->execute([
-     ':id' => $userID,
-     ':login' => $login,
-     ':name' => $name
- ]);
-if (!$status){
-$error = $res->errorInfo();
-$_SESSION['error'] =$error;
+$status = $res->execute([
+    ':id' => $userId,
+    ':login' => $login,
+    ':name' => $name,
+    ':city_id' => $cityId,
+]);
+
+if (!$status) {
+    $error = $res->errorInfo()[2];
+    $_SESSION['error'] = $error;
+} else {
+    $_SESSION['success'] = true;
 }
-#заполнить ключ в сесси если запрос выполнился успешно
-header("Location:../pages/user.php?id=$useId");
+
+header("Location: ../pages/user.php?id=$userId");
