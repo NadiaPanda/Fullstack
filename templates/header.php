@@ -1,5 +1,7 @@
 <?php
-require $_SERVER['DOCUMENT_ROOT'] . '/config.php';
+$document_root = $_SERVER['DOCUMENT_ROOT'];
+require $document_root . '/config.php';
+
 ?>
 
 <!doctype html>
@@ -18,9 +20,33 @@ require $_SERVER['DOCUMENT_ROOT'] . '/config.php';
         <?= $title ?>
     </title>
     <style>
-        .btn-danger {
+        .btn-user-delete {
             border-radius: 100px;
             padding: 2px 12px 4px 12px;
+        }
+        .card-image {
+            margin-top: 10px;
+            height: 180px;
+        }
+        .card-price {
+            text-align: center;
+            font-size: 23px;
+            border-bottom: 2px solid grey;
+        }
+        .card-image img {
+            width: auto;
+            height: 100%;
+        }
+        .btn-product-add, .btn-product-remove {
+            width: 37px;
+        }
+        .card-basket-buttons {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .card-basket-quantity {
+            line-height: 38px;
         }
     </style>
   </head>
@@ -35,6 +61,18 @@ require $_SERVER['DOCUMENT_ROOT'] . '/config.php';
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <?php if (isset($_SESSION['user'])) {
+                        if ($_SESSION['user']['is_admin']) { ?>
+                        <li class="nav-item">
+                            <a class="nav-link <?= $_SERVER['PHP_SELF'] == '/pages/admin/index.php' ? 'active' : '' ?>" aria-current="page" href="/pages/admin/index.php">
+                                Админка
+                            </a>
+                        </li>
+                    <?php }} ?>
+
+
+                    <?php if (!isset($_SESSION['user'])) { ?>
                     <li class="nav-item">
                         <a class="nav-link <?= $_SERVER['PHP_SELF'] == '/pages/login.php' ? 'active' : '' ?>" aria-current="page" href="/pages/login.php">
                             Авторизация
@@ -43,6 +81,13 @@ require $_SERVER['DOCUMENT_ROOT'] . '/config.php';
                     <li class="nav-item">
                         <a class="nav-link <?= $_SERVER['PHP_SELF'] == '/pages/register.php' ? 'active' : '' ?>" href="/pages/register.php">
                             Регистрация
+                        </a>
+                    </li>
+                    <?php } else { ?>
+
+                    <li class="nav-item">
+                        <a class="nav-link <?= $_SERVER['PHP_SELF'] == '/pages/basket.php' ? 'active' : '' ?>" href="/pages/basket.php">
+                            Корзина (<?= array_sum($_SESSION['products'] ?? []) ?>)
                         </a>
                     </li>
 
@@ -56,6 +101,8 @@ require $_SERVER['DOCUMENT_ROOT'] . '/config.php';
                             <li><a class="dropdown-item" href="/actions/logout.php">Выйти</a></li>
                         </ul>
                     </li>
+
+                    <?php } ?>
 
                 </ul>
                 </div>
